@@ -15,3 +15,6 @@
     "default_popup": "popup.html"
   }
 }
+
+// Source
+// http://carl-topham.com/theblog/post/creating-chrome-extension-uses-jquery-manipulate-dom-page/
