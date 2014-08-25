@@ -1,61 +1,58 @@
 var ttURL = 'http://127.0.0.1:5000/'
+var summary = ''
+var defaultCount = 2
 
 chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs) {
   summarize(tabs[0].url);
 });
 
 function summarize(url) {
-  console.log(url)
+  console.log('Summarizing this url: ' + url)
 
   $.get(ttURL + "summarize", {url: url}, "json")
     .done(function(data) {
-      checkSummary(data.id)
+      summary = data
+      showSentences(defaultCount)
     })
     .fail(function(data) {
-      alert(data.responseJSON.id)
+      checkSummary(data.responseJSON.id)
     });
-
-  // var xhr = new XMLHttpRequest();
-  // xhr.open("GET", ttURL + "summarize?url=" + url, true);
-
-  // xhr.onreadystatechange = function() {
-  //   if (xhr.readyState == 4) {
-  //     var res = JSON.parse(xhr.responseText);
-  //   }
-  // }
-
-  // xhr.send()
 }
 
 function checkSummary(summid) {
+  console.log('Checking if the summary is ready...')
+
   $.get(ttURL + 'get/' + summid, "json")
     .done(function(data) {
-      alert(data.sentences)
+      summary = data
+      showSentences(defaultCount)
     })
     .fail(function(data) {
-
+      setTimeout(function() {
+        checkSummary(summid)
+      }, 2000);
     })
 }
 
-// var xhr = new XMLHttpRequest();
-// var response = null
-// var defaultCount = 5
+function showSentences(count) {
+  console.log('Adding ' + count + ' sentences in the popup...')
 
-// xhr.open("GET", "http://127.0.0.1:5000/get/276", true);
+  $('#content').empty()
+  showRangeSlider(count);
 
-// xhr.onreadystatechange = function() {
-//   if (xhr.readyState == 4) {
-//     // innerText does not let the attacker inject HTML elements.
-//     // document.getElementById("content").innerText = xhr.responseText;
+  sentences =  summary.sentences
+  sentences.sort(sortScore).reverse();
+  sentences = sentences.slice(0, count)
+  sentences.sort(sortOrder)
 
-//     var res = JSON.parse(xhr.responseText);
-//     response = res;
+  var ul = $('<ul></ul>')
 
-//     showSentences(defaultCount);
-//   }
-// }
+  $.each(sentences, function(i, sentence) {
+    ul.append($('<li></li>').append(sentence.sentence))
+  });
 
-// xhr.send();
+  $('#content').append(ul);
+}
 
 // function showSentences(count) {
 //   console.log(tabURL)
@@ -79,38 +76,37 @@ function checkSummary(summid) {
 //   document.getElementById("content").appendChild(ul);
 // }
 
-// function showRangeSlider(count) {
-//   var range = document.createElement('input');
-//   range.id = 'sentencesRange'
-//   range.type = 'range';
-//   range.min = 1
-//   range.max = response['sentences'].length;
-//   range.step = 1
-//   range.value = count
+function showRangeSlider(count) {
+  var range = $('<input>').attr({
+    id: 'sentencesRange',
+    type: 'range',
+    min: 1,
+    max: summary.sentences.length,
+    step: 1,
+    value: count
+  }).change(function() {
+    showSentences($(this).val());
+  });
 
-//   document.getElementById("content").appendChild(range);
+  $('#content').append(range);
+}
 
-//   range.onchange = function() {
-//     showSentences(range.value)
-//   }
-// }
+function sortScore(a, b) {
+  if(a.score < b.score)
+    return -1;
 
-// function sortScore(a, b) {
-//   if(a.score < b.score)
-//     return -1;
+  if(a.score > b.score)
+    return 1
 
-//   if(a.score > b.score)
-//     return 1
+  return 0;
+}
 
-//   return 0;
-// }
+function sortOrder(a, b) {
+  if(a.order < b.order)
+    return -1;
 
-// function sortOrder(a, b) {
-//   if(a.order < b.order)
-//     return -1;
+  if(a.order > b.order)
+    return 1
 
-//   if(a.order > b.order)
-//     return 1
-
-//   return 0;
-// }
+  return 0;
+}
