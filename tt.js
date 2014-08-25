@@ -7,16 +7,34 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs) {
 function summarize(url) {
   console.log(url)
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", ttURL + "summarize?url=" + url, true);
+  $.get(ttURL + "summarize", {url: url}, "json")
+    .done(function(data) {
+      checkSummary(data.id)
+    })
+    .fail(function(data) {
+      alert(data.responseJSON.id)
+    });
 
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == 4) {
-      var res = JSON.parse(xhr.responseText);
-    }
-  }
+  // var xhr = new XMLHttpRequest();
+  // xhr.open("GET", ttURL + "summarize?url=" + url, true);
 
-  xhr.send()
+  // xhr.onreadystatechange = function() {
+  //   if (xhr.readyState == 4) {
+  //     var res = JSON.parse(xhr.responseText);
+  //   }
+  // }
+
+  // xhr.send()
+}
+
+function checkSummary(summid) {
+  $.get(ttURL + 'get/' + summid, "json")
+    .done(function(data) {
+      alert(data.sentences)
+    })
+    .fail(function(data) {
+
+    })
 }
 
 // var xhr = new XMLHttpRequest();
