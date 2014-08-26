@@ -1,6 +1,6 @@
 var ttURL = 'http://127.0.0.1:5000/'
 var summary = ''
-var defaultCount = 2
+var defaultCount = 5
 
 chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs) {
   summarize(tabs[0].url);
@@ -11,11 +11,18 @@ function summarize(url) {
 
   $.get(ttURL + "summarize", {url: url}, "json")
     .done(function(data) {
-      summary = data
-      showSentences(defaultCount)
+      if(data.sentences == null)
+        checkSummary(data.id)
+      else {
+        sentences = data
+        showSentences(defaultCount)
+      }
     })
     .fail(function(data) {
-      checkSummary(data.responseJSON.id)
+      if(data.responseJSON.error == 'summary not done yet')
+        checkSummary(data.responseJSON.id)
+      else
+        console.log(data.responseJSON.error)
     });
 }
 
