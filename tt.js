@@ -1,6 +1,7 @@
 var ttURL = 'http://127.0.0.1:5000/'
 var summary = ''
 var defaultCount = 5
+var view = 0
 
 chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs) {
   summarize(tabs[0].url);
@@ -14,7 +15,8 @@ function summarize(url) {
       if(data.sentences == null)
         checkSummary(data.id)
       else {
-        sentences = data
+        console.log(data)
+        summary = data
         showSentences(defaultCount)
       }
     })
@@ -46,42 +48,55 @@ function showSentences(count) {
 
   $('#content').empty()
   showRangeSlider(count);
+  toggleView(count);
 
   sentences =  summary.sentences
   sentences.sort(sortScore).reverse();
   sentences = sentences.slice(0, count)
   sentences.sort(sortOrder)
 
-  var ul = $('<ul></ul>')
+  if(view == 0) {
+    var ul = $('<ul></ul>')
 
-  $.each(sentences, function(i, sentence) {
-    ul.append($('<li></li>').append(sentence.sentence))
-  });
+    $.each(sentences, function(i, sentence) {
+      ul.append($('<li></li>').append(sentence.sentence))
+    });
 
-  $('#content').append(ul);
+    $('#content').append(ul);
+  }
+  else {
+    var p = $('<p></p>')
+
+    $.each(sentences, function(i, sentence) {
+      p.append(sentence.sentence + ' ')
+
+      if(i != 0 && i % 3 == 0)
+        p.append('<br><br>')
+    });
+
+    $('#content').append(p);
+  }
 }
 
-// function showSentences(count) {
-//   console.log(tabURL)
-//   document.getElementById("content").innerText = ''
-  
-//   showRangeSlider(count);
+function toggleView(count) {
+  var listView = $('<a>list view</a>').attr({
+    href: "#"
+  }).click(function() {
+    view = 0;
+    showSentences(count);
+  });
 
-//   sentences = response['sentences'];
-//   sentences.sort(sortScore).reverse();
-//   sentences = sentences.slice(0, count)
-//   sentences.sort(sortOrder)
+  var paragView = $('<a>paragraph view</a>').attr({
+    href: "#"
+  }).click(function() {
+    view = 1;
+    showSentences(count);
+  });
 
-//   var ul = document.createElement('ul');
-
-//   for(var i in sentences) {
-//     var li = document.createElement('li');
-//     li.appendChild(document.createTextNode(sentences[i].sentence));
-//     ul.appendChild(li)
-//   }
-
-//   document.getElementById("content").appendChild(ul);
-// }
+  $('#content').append(listView);
+  $('#content').append(' | ');
+  $('#content').append(paragView);
+}
 
 function showRangeSlider(count) {
   var range = $('<input>').attr({
