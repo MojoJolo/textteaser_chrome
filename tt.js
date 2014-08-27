@@ -55,17 +55,29 @@ function showSentences(count) {
   sentences = sentences.slice(0, count)
   sentences.sort(sortOrder)
 
+  var textContent = $('<div></div>').attr({
+    id: 'textContent'
+  });
+
   if(view == 0) {
     var ul = $('<ul></ul>')
 
     $.each(sentences, function(i, sentence) {
-      ul.append($('<li></li>').append(sentence.sentence))
+      var li = $('<li></li>').attr({
+        id: 'sentenceList'
+      });
+
+      li.append(sentence.sentence)
+
+      ul.append(li)
     });
 
-    $('#content').append(ul);
+    textContent.append(ul);
   }
   else {
-    var p = $('<p></p>')
+    var p = $('<p></p>').attr({
+      id: 'paragraph'
+    });
 
     $.each(sentences, function(i, sentence) {
       p.append(sentence.sentence + ' ')
@@ -74,28 +86,53 @@ function showSentences(count) {
         p.append('<br><br>')
     });
 
-    $('#content').append(p);
+    textContent.append(p);
   }
+
+  $('#content').append('<br>');
+  $('#content').append(textContent);
+
+  showFooter();
 }
 
 function toggleView(count) {
-  var listView = $('<a>list view</a>').attr({
+  var listView = $('<a>list</a>').attr({
     href: "#"
   }).click(function() {
     view = 0;
     showSentences(count);
   });
 
-  var paragView = $('<a>paragraph view</a>').attr({
+  var paragView = $('<a>paragraph</a>').attr({
     href: "#"
   }).click(function() {
     view = 1;
     showSentences(count);
   });
 
-  $('#content').append(listView);
-  $('#content').append(' | ');
-  $('#content').append(paragView);
+  var views = $('<div>View as: </div>').attr({
+    id: 'views'
+  });
+
+  views.append(listView);
+  views.append(' | ');
+  views.append(paragView);
+
+  $('#content').append(views);
+}
+
+function showFooter() {
+  var footer = $('<footer>Summary by </footer>').attr({
+    id: 'footer'
+  });
+
+  var logo = $('<a>TextTeaser</a>').attr({
+    id: 'logo',
+    href: 'http://www.textteaser.com/'
+  });
+
+  footer.append(logo);
+  $('#content').append(footer);
 }
 
 function showRangeSlider(count) {
