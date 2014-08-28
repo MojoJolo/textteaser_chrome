@@ -1,7 +1,9 @@
-var ttURL = 'http://127.0.0.1:5000/'
+var ttURL = 'http://173.255.205.41/'
 var summary = ''
 var defaultCount = 5
+var paragBreak = 3
 var view = 0
+var max = 1
 
 chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs) {
   summarize(tabs[0].url);
@@ -46,6 +48,9 @@ function checkSummary(summid) {
 function showSentences(count) {
   console.log('Adding ' + count + ' sentences in the popup...')
 
+  max = Math.floor(summary.sentences.length / 2 + 1)
+  count = count < max ? count : max
+
   $('#content').empty()
   showRangeSlider(count);
   toggleView(count);
@@ -80,10 +85,10 @@ function showSentences(count) {
     });
 
     $.each(sentences, function(i, sentence) {
-      p.append(sentence.sentence + ' ')
-
-      if(i != 0 && i % 3 == 0)
+      if(i != 0 && i % paragBreak == 0)
         p.append('<br><br>')
+      
+      p.append(sentence.sentence + ' ')
     });
 
     textContent.append(p);
@@ -140,7 +145,7 @@ function showRangeSlider(count) {
     id: 'sentencesRange',
     type: 'range',
     min: 1,
-    max: summary.sentences.length,
+    max: max,
     step: 1,
     value: count
   }).change(function() {
