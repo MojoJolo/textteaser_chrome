@@ -1,26 +1,29 @@
 {
   "manifest_version": 2,
 
-  "name": "TextTeaser Chrome Extension",
-  "description": "This extension uses TextTeaser to summarize web articles.",
-
+  "name": "TextTeaser Browser Extension",
   "version": "0.1",
 
-  "permissions": [
-    "http://127.0.0.1:5000/",
-    "http://173.255.205.41/",
-    "tabs"
-  ],
+  "description": "TextTeaser Extension allows you to summarize web articles easily with just a single click.",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
 
   "browser_action": {
     "default_icon": "assets/icons/icon16.png",
     "default_popup": "popup.html"
   },
 
-  "icons": {
-    "16": "assets/icons/icon16.png",
-    "32": "assets/icons/icon32.png",
-    "48": "assets/icons/icon48.png",
-    "128": "assets/icons/icon128.png"
-  }
+  "author": "Jolo Balbin",
+
+  "permissions": [
+    "http://extension.textteaser.com/",
+    "tabs"
+  ],
+
+  "homepage_url": "http://www.textteaser.com/extension.html",
+  "short_name": "TextTeaser"
 }
