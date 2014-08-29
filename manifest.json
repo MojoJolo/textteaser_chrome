@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "TextTeaser Browser Extension",
-  "version": "0.1",
+  "version": "0.2",
 
   "description": "TextTeaser Extension allows you to summarize web articles easily with just a single click.",
   "icons": {
