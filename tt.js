@@ -1,4 +1,5 @@
 var ttURL = 'http://173.255.205.41/'
+// var ttURL = 'http://127.0.0.1:5000/'
 var summary = ''
 var defaultCount = 5
 var paragBreak = 3
@@ -23,10 +24,18 @@ function summarize(url) {
       }
     })
     .fail(function(data) {
-      if(data.responseJSON.error == 'summary not done yet')
+      if (data.responseJSON == null) {
+        $('#init').empty();
+        $('#init').append('Something wrong happened. Please try again later.');
+      }
+      else if(data.responseJSON.error == 'summary not done yet')
         checkSummary(data.responseJSON.id)
-      else
-        console.log(data.responseJSON.error)
+      else {
+        console.log(data.responseJSON.error);
+        $('#init').empty();
+        $('#init').append(data.responseJSON.error);
+      }
+        
     });
 }
 
@@ -51,7 +60,7 @@ function showSentences(count) {
   max = Math.floor(summary.sentences.length / 2 + 1)
   count = count < max ? count : max
 
-  $('#content').empty()
+  $('#content').empty();
   showRangeSlider(count);
   toggleView(count);
 
@@ -143,6 +152,7 @@ function showFooter() {
 function showRangeSlider(count) {
   var range = $('<input>').attr({
     id: 'sentencesRange',
+    name: 'sentencesName',
     type: 'range',
     min: 1,
     max: max,
@@ -152,7 +162,14 @@ function showRangeSlider(count) {
     showSentences($(this).val());
   });
 
-  $('#content').append(range);
+  var sliderDiv = $('<div></div>').attr({
+    id: 'sliderDiv'
+  });
+
+  sliderDiv.append('<label for="sentencesRange">Sentences: </label>')
+  sliderDiv.append(range);
+
+  $('#content').append(sliderDiv);
 }
 
 function sortScore(a, b) {

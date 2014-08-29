@@ -4,7 +4,7 @@
   "name": "TextTeaser Chrome Extension",
   "description": "This extension uses TextTeaser to summarize web articles.",
 
-  "version": "1.0",
+  "version": "0.1",
 
   "permissions": [
     "http://127.0.0.1:5000/",

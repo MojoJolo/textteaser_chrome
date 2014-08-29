@@ -27,7 +27,7 @@
       margin-bottom: 7px;
     }
 
-    #loader {
+    #init {
       text-align: center;
       width: 100%;
     }
@@ -43,7 +43,12 @@
 
     #textContent {
       background-color: white;
+      border: 1px solid #0a968d;
+      box-shadow: 1px 1px 5px #8ddfda;
+      border-radius: 5px;
       padding: 10px;
+      margin: 5px;
+      margin-top: 10px;
     }
 
     #logo {
@@ -51,6 +56,21 @@
       font-size: 16px;
       text-decoration: none;
       color: #dd4917;
+    }
+
+    #sliderDiv {
+      display: table-cell;
+      vertical-align: middle;
+      height: 50px;
+      float: left;
+    }
+
+    #sliderDiv label {
+      vertical-align: middle;
+    }
+
+    #sentencesRange {
+      vertical-align: middle;
     }
 
     #footer {
@@ -64,11 +84,11 @@
 </head>
 <body>
   <div id="content">
-    <div id="loader">
+    <div id="init">
       <img src="assets/loader.gif">
       <br>
       <br>
-      Loading summary...
+      TextTeaser is summarizing the article...
     </div>
   </div>
 </body>
