@@ -1,4 +1,4 @@
-var ttURL = 'http://173.255.205.41/'
+var ttURL = 'http://extension.textteaser.com/'
 // var ttURL = 'http://127.0.0.1:5000/'
 var summary = ''
 var defaultCount = 5
