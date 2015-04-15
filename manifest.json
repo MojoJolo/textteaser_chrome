@@ -21,6 +21,8 @@
 
   "permissions": [
     "http://extension.textteaser.com/",
+    "http://127.0.0.1:5000/",
+    "http://www.textteaser.com/",
     "tabs"
   ],
 

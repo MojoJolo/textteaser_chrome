@@ -1,5 +1,5 @@
-var ttURL = 'http://extension.textteaser.com/'
-// var ttURL = 'http://127.0.0.1:5000/'
+// var ttURL = 'http://extension.textteaser.com/'
+var ttURL = 'http://127.0.0.1:5000/'
 var summary = ''
 var defaultCount = 5
 var paragBreak = 3
@@ -13,51 +13,28 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs) {
 function summarize(url) {
   console.log('Summarizing this url: ' + url)
 
-  $.get(ttURL + "summarize", {url: url}, "json")
+  $.get(ttURL + "summary", {url: url, output: "json"}, "json")
     .done(function(data) {
-      if(data.sentences == null)
-        checkSummary(data.id)
-      else {
-        console.log(data)
-        summary = data
-        showSentences(defaultCount)
-      }
+      summary = data
+      showSentences(defaultCount)
     })
     .fail(function(data) {
       if (data.responseJSON == null) {
         $('#init').empty();
         $('#init').append('Something wrong happened. Please try again later.');
       }
-      else if(data.responseJSON.error == 'summary not done yet')
-        checkSummary(data.responseJSON.id)
       else {
         console.log(data.responseJSON.error);
         $('#init').empty();
         $('#init').append(data.responseJSON.error);
-      }
-        
+      }     
     });
-}
-
-function checkSummary(summid) {
-  console.log('Checking if the summary is ready...')
-
-  $.get(ttURL + 'get/' + summid, "json")
-    .done(function(data) {
-      summary = data
-      showSentences(defaultCount)
-    })
-    .fail(function(data) {
-      setTimeout(function() {
-        checkSummary(summid)
-      }, 2000);
-    })
 }
 
 function showSentences(count) {
   console.log('Adding ' + count + ' sentences in the popup...')
 
-  max = Math.floor(summary.sentences.length / 2 + 1)
+  max = Math.floor(summary.su.length / 2 + 1)
   count = count < max ? count : max
 
   $('#content').empty();
