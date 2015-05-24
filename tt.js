@@ -1,5 +1,5 @@
 // var ttURL = 'http://extension.textteaser.com/'
-var ttURL = 'http://127.0.0.1:5000/'
+var ttURL = 'http://textteaser.com/'
 var summary = ''
 var defaultCount = 5
 var paragBreak = 3
@@ -34,7 +34,7 @@ function summarize(url) {
 function showSentences(count) {
   console.log('Adding ' + count + ' sentences in the popup...')
 
-  max = Math.floor(summary.su.length / 2 + 1)
+  max = Math.floor(summary.sentences.length / 2 + 1)
   count = count < max ? count : max
 
   $('#content').empty();
